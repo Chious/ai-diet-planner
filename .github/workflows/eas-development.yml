@@ -1,0 +1,41 @@
+name: EAS Build (Development)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eas-development-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eas-build:
+    runs-on: ubuntu-latest
+    env:
+      EAS_ACCESS_KEY: ${{ secrets.EAS_ACCESS_KEY }}
+      EXPO_NO_TELEMETRY: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+
+      - name: EAS build (development profile)
+        run: eas build --platform all --profile development --non-interactive --no-wait
