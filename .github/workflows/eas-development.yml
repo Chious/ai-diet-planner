@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       EAS_ACCESS_KEY: ${{ secrets.EAS_ACCESS_KEY }}
+      EXPO_TOKEN: ${{ secrets.EAS_ACCESS_KEY }}
       EXPO_NO_TELEMETRY: "1"
     steps:
       - name: Checkout
