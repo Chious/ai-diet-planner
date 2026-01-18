@@ -1,0 +1,577 @@
+{
+  "meta": {
+    "name": "AI Diet Planner Design System",
+    "source": "Screenshot reference provided by user",
+    "purpose": "High-level creative direction to reproduce the visual language"
+  },
+  "vision": {
+    "keywords": [
+      "soft",
+      "airy",
+      "pastel",
+      "friendly",
+      "rounded",
+      "lightweight"
+    ],
+    "design_principles": [
+      "Use large rounded shapes and generous padding to feel approachable.",
+      "Keep contrast gentle; avoid harsh black except for key text.",
+      "Favor subtle depth with soft shadows and low-contrast borders.",
+      "Keep layouts simple, centered, and visually balanced.",
+      "Use small pops of color to highlight data and actions."
+    ]
+  },
+  "color": {
+    "background": {
+      "app": "#F5F5F7",
+      "surface": "#FFFFFF",
+      "softMint": "#E9F3E8",
+      "softLavender": "#EDEBFF",
+      "softPeach": "#FFE6E1",
+      "softBlue": "#DDEEFF",
+      "softPink": "#F9D7FF"
+    },
+    "text": {
+      "primary": "#1C1C1E",
+      "secondary": "#6C6C70",
+      "tertiary": "#9A9AA0",
+      "inverse": "#FFFFFF"
+    },
+    "accent": {
+      "green": "#9ED6A5",
+      "mint": "#BFE6C6",
+      "purple": "#B9B2F5",
+      "pink": "#E8B6F0",
+      "orange": "#F5C070",
+      "blue": "#A8C9F5"
+    },
+    "semantic": {
+      "positive": "#7CCB8B",
+      "negative": "#E77E7E",
+      "warning": "#F2B45B",
+      "info": "#7FB2E8"
+    },
+    "dataViz": {
+      "barPrimary": "#9ED6A5",
+      "barSecondary": "#CDE9F5",
+      "line": "#B9B2F5",
+      "grid": "#E6E6EB"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "System / SF Pro",
+      "fallback": "Inter, Helvetica, Arial, sans-serif"
+    },
+    "scale": {
+      "titleLarge": {
+        "size": 24,
+        "weight": 700,
+        "lineHeight": 30
+      },
+      "title": {
+        "size": 20,
+        "weight": 700,
+        "lineHeight": 26
+      },
+      "headline": {
+        "size": 16,
+        "weight": 600,
+        "lineHeight": 22
+      },
+      "body": {
+        "size": 14,
+        "weight": 500,
+        "lineHeight": 20
+      },
+      "caption": {
+        "size": 12,
+        "weight": 500,
+        "lineHeight": 16
+      },
+      "micro": {
+        "size": 11,
+        "weight": 500,
+        "lineHeight": 14
+      }
+    },
+    "textStyleRules": [
+      "Use bold weights for titles and key metrics.",
+      "Use medium weight for body and labels.",
+      "Use muted colors for secondary information."
+    ]
+  },
+  "spacing": {
+    "grid": 8,
+    "insets": {
+      "screen": 24,
+      "card": 16,
+      "chip": 8,
+      "listItem": 12
+    },
+    "stack": {
+      "xs": 4,
+      "sm": 8,
+      "md": 12,
+      "lg": 16,
+      "xl": 24
+    }
+  },
+  "radius": {
+    "card": 20,
+    "button": 16,
+    "chip": 999,
+    "image": 24,
+    "pill": 999
+  },
+  "elevation": {
+    "card": {
+      "shadowColor": "#000000",
+      "shadowOpacity": 0.08,
+      "shadowRadius": 18,
+      "shadowOffset": {
+        "x": 0,
+        "y": 8
+      }
+    },
+    "floating": {
+      "shadowColor": "#000000",
+      "shadowOpacity": 0.12,
+      "shadowRadius": 22,
+      "shadowOffset": {
+        "x": 0,
+        "y": 10
+      }
+    }
+  },
+  "layout": {
+    "screen": {
+      "background": "app.background",
+      "safeArea": true,
+      "headerHeight": 56,
+      "bottomBarHeight": 72
+    },
+    "cards": {
+      "spacing": 16,
+      "layout": "stacked",
+      "alignment": "left"
+    },
+    "grids": {
+      "columns": 2,
+      "gap": 12
+    }
+  },
+  "iconography": {
+    "style": "rounded, filled or semi-filled glyphs",
+    "stroke": 1.5,
+    "size": {
+      "small": 16,
+      "medium": 20,
+      "large": 24
+    },
+    "color": "text.secondary"
+  },
+  "components": {
+    "appHeader": {
+      "structure": [
+        "left: avatar + greeting text",
+        "right: icon buttons"
+      ],
+      "avatar": {
+        "size": 36,
+        "radius": 18,
+        "border": "none"
+      },
+      "title": "headline",
+      "subtitle": "caption",
+      "iconButton": {
+        "size": 36,
+        "radius": 18,
+        "background": "surface",
+        "elevation": "card"
+      }
+    },
+    "calendarStrip": {
+      "container": {
+        "background": "surface",
+        "radius": 18,
+        "padding": "spacing.insets.card"
+      },
+      "dayPill": {
+        "size": 36,
+        "radius": 18,
+        "backgroundActive": "accent.mint",
+        "backgroundInactive": "surface",
+        "textStyle": "caption"
+      }
+    },
+    "dailyOverview": {
+      "layout": "calorie budget card + stacked macro cards",
+      "gutter": 12,
+      "budgetCard": {
+        "background": "#1C1C1E",
+        "radius": 22,
+        "textColor": "#EDEFF2",
+        "mutedText": "#9BA1A6",
+        "accentValue": "#1CD760",
+        "chipValue": "#7FB2E8"
+      },
+      "budgetRing": {
+        "size": 120,
+        "stroke": 10,
+        "trackColor": "#2A2B2F",
+        "progressColor": "#1CD760",
+        "rotationDeg": -40
+      },
+      "smallCards": {
+        "carbs": "background.softBlue",
+        "protein": "background.softPink",
+        "fat": "background.softPeach",
+        "progressTrack": "tinted",
+        "progressFill": "accent"
+      }
+    },
+    "macroCard": {
+      "container": {
+        "radius": "radius.card",
+        "padding": "spacing.insets.card",
+        "background": "background.softBlue"
+      },
+      "metric": {
+        "titleStyle": "caption",
+        "valueStyle": "headline"
+      },
+      "variation": {
+        "protein": "background.softPink",
+        "fat": "background.softPeach"
+      }
+    },
+    "listItemCard": {
+      "container": {
+        "radius": "radius.card",
+        "padding": "spacing.insets.listItem",
+        "background": "surface",
+        "elevation": "card"
+      },
+      "left": "thumbnail or emoji",
+      "center": "title + subtext",
+      "right": "kcal + macro chips"
+    },
+    "loggedMealItem": {
+      "container": {
+        "radius": 16,
+        "padding": 12,
+        "background": "surface",
+        "elevation": "card"
+      },
+      "left": {
+        "size": 44,
+        "radius": 22,
+        "background": "background.softLavender"
+      },
+      "kcal": {
+        "valueStyle": "title",
+        "unitStyle": "caption"
+      },
+      "macroChips": {
+        "shape": "pill",
+        "size": "xs",
+        "colors": [
+          "background.softBlue",
+          "background.softLavender",
+          "background.softPeach"
+        ]
+      }
+    },
+    "chip": {
+      "shape": "pill",
+      "padding": "spacing.insets.chip",
+      "background": "background.softLavender",
+      "textStyle": "micro"
+    },
+    "primaryButton": {
+      "shape": "pill",
+      "height": 48,
+      "background": "text.primary",
+      "textColor": "text.inverse",
+      "elevation": "floating"
+    },
+    "tabBar": {
+      "container": {
+        "height": 72,
+        "background": "surface",
+        "radius": 28,
+        "elevation": "floating",
+        "paddingHorizontal": 18,
+        "paddingVertical": 12
+      },
+      "item": {
+        "iconSize": 20,
+        "labelStyle": "micro",
+        "activeColor": "text.primary",
+        "inactiveColor": "text.secondary",
+        "iconStyle": "outline",
+        "labelWeight": 600
+      },
+      "centerAction": {
+        "size": 54,
+        "offsetY": -24,
+        "background": "accent.green",
+        "iconColor": "text.inverse",
+        "elevation": "floating"
+      },
+      "outerShell": {
+        "background": "background.app",
+        "paddingBottom": 16
+      }
+    },
+    "imageHero": {
+      "container": {
+        "background": "background.softMint",
+        "radius": 24,
+        "padding": 16
+      },
+      "image": {
+        "style": "3D illustration",
+        "shadow": "soft"
+      },
+      "paginationDots": {
+        "size": 6,
+        "activeColor": "accent.green",
+        "inactiveColor": "background.surface"
+      }
+    },
+    "foodDetailHero": {
+      "container": {
+        "background": "background.softMint",
+        "radiusBottom": 32,
+        "paddingTop": 20,
+        "paddingBottom": 12
+      },
+      "iconButtons": {
+        "size": 36,
+        "radius": 18,
+        "background": "surface",
+        "elevation": "card"
+      },
+      "heroImage": {
+        "size": 220,
+        "style": "3D illustration or oversized emoji"
+      },
+      "pagination": {
+        "activeWidth": 18,
+        "inactiveSize": 6,
+        "activeColor": "accent.green",
+        "inactiveColor": "#C9D6C8"
+      }
+    },
+    "foodDetailCard": {
+      "container": {
+        "radius": 24,
+        "padding": 18,
+        "background": "surface",
+        "elevation": "floating",
+        "overlapHero": true
+      },
+      "title": "headline",
+      "kcal": {
+        "valueStyle": "title",
+        "unitStyle": "caption"
+      },
+      "actionButtons": {
+        "size": 36,
+        "radius": 18,
+        "background": "background.app"
+      },
+      "macroChips": {
+        "shape": "pill",
+        "size": "sm",
+        "colors": [
+          "background.softMint",
+          "background.softLavender",
+          "background.softPeach"
+        ]
+      },
+      "description": {
+        "style": "caption",
+        "lineHeight": 18
+      },
+      "infoRow": {
+        "layout": "three columns with dividers",
+        "dividerColor": "#E2E2E6",
+        "labelStyle": "micro",
+        "valueStyle": "caption"
+      },
+      "servingsStepper": {
+        "buttonSize": 24,
+        "buttonRadius": 12,
+        "background": "background.app"
+      }
+    },
+    "accordionStack": {
+      "spacing": 12,
+      "cardRadius": 20,
+      "headerStyle": "headline",
+      "accent": {
+        "directions": "accent.orange",
+        "ingredients": "background.softLavender"
+      }
+    },
+    "nutritionStats": {
+      "metricRow": {
+        "titleStyle": "caption",
+        "valueStyle": "title",
+        "accentChip": "chip"
+      },
+      "chart": {
+        "type": "stacked bars",
+        "radius": 6,
+        "colors": [
+          "dataViz.barPrimary",
+          "dataViz.barSecondary"
+        ],
+        "gridColor": "dataViz.grid"
+      }
+    },
+    "lineChartCard": {
+      "container": {
+        "radius": "radius.card",
+        "padding": "spacing.insets.card",
+        "background": "surface"
+      },
+      "line": {
+        "color": "dataViz.line",
+        "width": 2
+      },
+      "marker": {
+        "size": 10,
+        "color": "accent.purple"
+      }
+    },
+    "segmentControl": {
+      "container": {
+        "background": "background.surface",
+        "radius": "pill",
+        "padding": 4
+      },
+      "segment": {
+        "height": 32,
+        "radius": "pill",
+        "activeBackground": "surface",
+        "inactiveBackground": "transparent",
+        "textStyle": "caption"
+      }
+    },
+    "trackerHeader": {
+      "layout": "centered title with back button",
+      "backButton": {
+        "size": 36,
+        "radius": 18,
+        "background": "surface"
+      },
+      "titleStyle": "headline"
+    },
+    "nutritionCard": {
+      "container": {
+        "radius": "radius.card",
+        "padding": "spacing.insets.card",
+        "background": "surface",
+        "elevation": "card"
+      },
+      "metrics": {
+        "valueStyle": "title",
+        "labelStyle": "caption"
+      },
+      "downloadButton": {
+        "size": 32,
+        "radius": 16,
+        "background": "#F0F0F2"
+      },
+      "barChart": {
+        "barWidth": 18,
+        "barRadius": 8,
+        "topColor": "dataViz.barSecondary",
+        "bottomColor": "accent.green",
+        "labelsStyle": "micro"
+      }
+    },
+    "bodyFatCard": {
+      "container": {
+        "radius": "radius.card",
+        "padding": "spacing.insets.card",
+        "background": "#F4F2FF"
+      },
+      "metrics": {
+        "valueStyle": "title",
+        "labelStyle": "caption"
+      },
+      "lineChart": {
+        "lineColor": "accent.purple",
+        "badgeColor": "accent.purple",
+        "markerSize": 12,
+        "height": 140
+      }
+    },
+    "primaryCTA": {
+      "shape": "pill",
+      "height": 48,
+      "background": "text.primary",
+      "textColor": "text.inverse",
+      "iconSize": 16
+    },
+    "habitPlanHeader": {
+      "background": "#17181C",
+      "radius": 18,
+      "icon": {
+        "size": 40,
+        "radius": 20,
+        "border": "accent.blue"
+      },
+      "titleStyle": "headline",
+      "subtitleStyle": "caption",
+      "chevronColor": "accent.blue"
+    },
+    "habitPlanSection": {
+      "titleStyle": "headline",
+      "card": {
+        "background": "#17181C",
+        "radius": 18,
+        "padding": 16,
+        "divider": "#2A2B2F"
+      },
+      "row": {
+        "iconSize": 36,
+        "iconBorder": "#2E9C6A",
+        "labelStyle": "body",
+        "valueStyle": "body",
+        "valueColor": "accent.blue",
+        "helperStyle": "caption",
+        "highlightValueColor": "accent.green"
+      }
+    },
+    "accordion": {
+      "container": {
+        "radius": "radius.card",
+        "background": "background.softPeach"
+      },
+      "header": {
+        "textStyle": "headline",
+        "icon": "chevron"
+      },
+      "section": {
+        "background": "background.softLavender",
+        "radius": 16,
+        "padding": 12
+      }
+    }
+  },
+  "content": {
+    "tone": "warm and encouraging",
+    "microcopy": "short, positive, and supportive"
+  },
+  "motion": {
+    "transitions": "soft, 200-250ms",
+    "easing": "ease-out",
+    "feedback": "subtle scale on press"
+  }
+}

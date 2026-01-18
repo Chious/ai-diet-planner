@@ -1,0 +1,368 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and Architecture",
+        "description": "Initialize React Native project with TypeScript, set up folder structure, and configure essential dependencies",
+        "details": "1. Create a new React Native project using the latest version (0.73+)\n2. Configure TypeScript and ESLint\n3. Set up folder structure following best practices:\n   - /src\n     - /components\n     - /screens\n     - /navigation\n     - /hooks\n     - /services\n     - /utils\n     - /store\n     - /types\n     - /assets\n4. Install core dependencies:\n   - State management: Redux Toolkit or Zustand\n   - Navigation: React Navigation\n   - Database: react-native-sqlite-storage\n   - UI components: React Native Paper or similar\n   - Form handling: React Hook Form\n5. Configure basic app theme and design system\n6. Set up development environment for both iOS and Android\n7. Create a README with setup instructions",
+        "testStrategy": "1. Verify project builds successfully on both iOS and Android\n2. Run TypeScript type checking to ensure no errors\n3. Confirm all dependencies are correctly installed and working\n4. Test basic navigation between placeholder screens\n5. Verify hot reloading works correctly",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Database Schema Implementation",
+        "description": "Implement SQLite database schema based on the data models defined in the PRD",
+        "details": "1. Set up SQLite database connection using react-native-sqlite-storage\n2. Create database initialization script\n3. Implement the following tables based on PRD data models:\n   - UserProfile (id, age, gender, height, weight, activityLevel, goal, targetWeight, dietaryRestrictions, createdAt, updatedAt)\n   - NutritionPlan (id, userId, dailyCalories, proteinGrams, carbsGrams, fatsGrams, customRatios, startDate, isActive)\n   - FoodItem (id, name, brand, barcode, source, servingSize, servingUnit, nutrition JSON, createdAt)\n   - MealLog (id, userId, date, mealType, items JSON, notes, createdAt)\n   - Recipe (id, userId, name, servings, ingredients JSON, instructions, tags, nutritionPerServing JSON, createdAt, updatedAt)\n4. Create database migration system for future updates\n5. Implement data access layer with CRUD operations for each model\n6. Add indexes for frequently queried fields\n7. Create utility functions for common database operations",
+        "testStrategy": "1. Unit tests for each CRUD operation\n2. Test database creation and migration\n3. Verify data integrity constraints\n4. Performance testing for common queries\n5. Test with sample data to ensure proper relationships\n6. Verify proper error handling for database operations",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "User Profile and Onboarding Flow",
+        "description": "Implement the user profile creation and onboarding questionnaire to collect user information for personalized nutrition planning",
+        "details": "1. Create multi-step onboarding questionnaire screens:\n   - Welcome screen with app overview\n   - Personal information (age, gender, height, weight)\n   - Activity level selection with descriptions\n   - Goal selection (lose weight, maintain, gain muscle)\n   - Target weight input (conditional based on goal)\n   - Dietary restrictions/preferences\n2. Implement form validation for all inputs\n3. Create progress indicator for multi-step process\n4. Store user profile in SQLite database\n5. Implement skip/later options for non-essential steps\n6. Add educational tooltips explaining each metric\n7. Create user profile edit screen accessible from settings\n8. Implement proper keyboard handling and form navigation",
+        "testStrategy": "1. Test form validation for all input fields\n2. Verify data is correctly saved to database\n3. Test navigation between onboarding steps\n4. Verify conditional rendering based on user selections\n5. Test edge cases (very low/high values)\n6. Usability testing for form completion time\n7. Verify profile editing functionality",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Nutrition Plan Calculator",
+        "description": "Implement the nutrition plan calculator that generates personalized macro targets based on user profile data",
+        "details": "1. Implement TDEE calculation using Mifflin-St Jeor formula:\n   - Men: (10 × weight[kg]) + (6.25 × height[cm]) - (5 × age) + 5\n   - Women: (10 × weight[kg]) + (6.25 × height[cm]) - (5 × age) - 161\n2. Apply activity multipliers:\n   - Sedentary: 1.2\n   - Lightly active: 1.375\n   - Moderately active: 1.55\n   - Very active: 1.725\n   - Extra active: 1.9\n3. Adjust calories based on goal:\n   - Weight loss: -500 calories\n   - Maintenance: +0 calories\n   - Weight gain: +500 calories\n4. Calculate macronutrient targets:\n   - Protein: 1.6-2.2g per kg body weight (goal-dependent)\n   - Fats: 20-35% of total calories\n   - Carbs: Remaining calories\n5. Allow for custom macro ratio adjustments\n6. Implement validation to prevent unhealthy targets\n7. Store calculated plan in NutritionPlan table\n8. Create recalculation function for weekly updates",
+        "testStrategy": "1. Unit tests for all calculation formulas\n2. Test with various user profiles and verify correct outputs\n3. Verify edge cases (very low/high weights, extreme goals)\n4. Test custom ratio adjustments\n5. Verify validation prevents dangerous values\n6. Test recalculation functionality\n7. Compare results with established nutrition calculators",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Dashboard Implementation",
+        "description": "Create the main dashboard screen showing daily nutrition targets, progress, and quick access to core features",
+        "details": "1. Design and implement dashboard layout with:\n   - Daily calorie target and current consumption\n   - Macro nutrient progress rings (protein, carbs, fats)\n   - Quick-add buttons for meal categories\n   - Today's meal log summary\n   - Progress towards goals\n2. Implement color-coded indicators (green=on target, yellow=close, red=exceeded)\n3. Create daily reset logic for tracking\n4. Add pull-to-refresh functionality\n5. Implement navigation to all main app sections\n6. Add educational tooltips explaining each metric\n7. Create empty states for first-time users\n8. Optimize rendering performance for frequent updates",
+        "testStrategy": "1. Test dashboard rendering with various data states\n2. Verify calculations match expected values\n3. Test color indicators at different thresholds\n4. Verify navigation to all main sections\n5. Test empty states and first-time user experience\n6. Performance testing for rendering speed\n7. Usability testing for information clarity",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Food Database Integration",
+        "description": "Integrate with Open Food Facts API and implement the local food database with basic ingredients",
+        "details": "1. Create API service for Open Food Facts integration\n2. Implement barcode scanning functionality\n3. Create search interface with text input and filters\n4. Implement local caching of frequently accessed foods\n5. Create data model for food items with all required nutritional fields\n6. Seed database with 100 common ingredients from USDA FoodData Central:\n   - Raw meats, poultry, fish\n   - Vegetables, fruits\n   - Grains, legumes, nuts\n   - Dairy products, eggs\n   - Cooking oils and condiments\n7. Implement fuzzy search for forgiving name matching\n8. Create synchronization logic for database updates\n9. Add error handling for API failures with fallbacks",
+        "testStrategy": "1. Test API integration with real Open Food Facts requests\n2. Verify barcode scanning with various product barcodes\n3. Test search functionality with partial and misspelled terms\n4. Verify local caching reduces API calls\n5. Test database seeding and data integrity\n6. Verify offline functionality with cached items\n7. Performance testing for search response time",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Meal Logging Interface",
+        "description": "Implement the meal logging functionality allowing users to log foods with accurate nutritional data",
+        "details": "1. Create meal logging flow:\n   - Meal type selection (breakfast, lunch, dinner, snack)\n   - Food search interface\n   - Portion size selection with common units\n   - Add multiple items to a meal\n   - Review and save functionality\n2. Implement portion size converter between different units\n3. Create recent/frequent items list for quick access\n4. Add favorites functionality\n5. Implement meal notes field\n6. Create swipe-to-delete for logged items\n7. Implement copy meals from previous days\n8. Add validation to prevent duplicate entries\n9. Create detailed nutritional breakdown view for meals",
+        "testStrategy": "1. Test full meal logging flow from selection to saving\n2. Verify unit conversions are accurate\n3. Test adding multiple items to a meal\n4. Verify recent/favorites functionality\n5. Test editing and deleting logged items\n6. Verify meal copying from previous days\n7. Test nutritional calculations for complete meals\n8. Usability testing for logging speed and ease",
+        "priority": "high",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "AI Food Scanner - Camera Interface",
+        "description": "Implement the camera interface for the AI food scanner feature",
+        "details": "1. Integrate react-native-vision-camera for camera functionality\n2. Create camera viewfinder with guide overlay for optimal food positioning\n3. Implement camera controls (flash, focus, gallery upload)\n4. Add real-time preview of captured image\n5. Implement image preprocessing to optimize quality\n6. Add auto-compression for images over 4MB\n7. Create gallery picker for existing photos\n8. Implement permission handling for camera access\n9. Add loading indicators and error states\n10. Create fallback to manual entry if camera unavailable",
+        "testStrategy": "1. Test camera functionality on various devices\n2. Verify image capture quality and preprocessing\n3. Test compression for large images\n4. Verify gallery picker functionality\n5. Test permission flows (granted, denied, requested)\n6. Verify fallback to manual entry\n7. Test in various lighting conditions\n8. Verify UI elements don't interfere with viewfinder",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "AI Food Scanner - API Integration",
+        "description": "Implement the AI API integration for food recognition from images",
+        "details": "1. Create API service for OpenAI Vision API integration\n2. Implement secure token storage using device keychain/keystore\n3. Create token configuration screen with setup instructions\n4. Implement optimized vision-language model prompts for food recognition\n5. Add response parsing to extract:\n   - Food item identification\n   - Estimated portion size\n   - Suggested nutritional values\n   - Confidence score\n6. Implement 30-second timeout with retry logic\n7. Create token usage tracking and cost estimation\n8. Add error handling for API failures\n9. Implement result review screen before saving\n10. Create fallback to manual entry if AI fails",
+        "testStrategy": "1. Test API integration with sample food images\n2. Verify token storage security\n3. Test timeout and retry functionality\n4. Verify response parsing accuracy\n5. Test with various food types (packaged, raw, prepared)\n6. Verify token usage tracking\n7. Test error handling and fallbacks\n8. Verify result review and editing functionality",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Recipe Management - Creation Interface",
+        "description": "Implement the recipe creation and management functionality",
+        "details": "1. Create recipe builder interface with:\n   - Recipe name and servings input\n   - Ingredient search and selection\n   - Quantity and unit selection per ingredient\n   - Optional preparation notes\n   - Tags/categories assignment\n2. Implement automatic nutrition calculation per serving\n3. Create recipe library view with search and filtering\n4. Add recipe editing functionality\n5. Implement recipe deletion with confirmation\n6. Create recipe detail view showing ingredients and nutrition\n7. Add quick-log functionality from recipe library\n8. Implement recipe categorization and tagging system",
+        "testStrategy": "1. Test full recipe creation flow\n2. Verify nutrition calculations are accurate\n3. Test recipe editing and updating\n4. Verify search and filtering in recipe library\n5. Test recipe deletion and confirmation\n6. Verify quick-logging from recipe library\n7. Test with recipes containing many ingredients\n8. Verify categorization and tagging system",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Recipe Import/Export Functionality",
+        "description": "Implement recipe sharing via export and import functionality",
+        "details": "1. Create JSON schema for recipe export format\n2. Implement export functionality with file generation\n3. Add share options using native share sheet\n4. Create import parser with validation\n5. Implement conflict resolution for duplicate recipes\n6. Add import success/failure feedback\n7. Create batch export/import for multiple recipes\n8. Implement permission handling for file access\n9. Add documentation for export format",
+        "testStrategy": "1. Test export functionality and file generation\n2. Verify exported JSON adheres to schema\n3. Test sharing via various apps\n4. Verify import parsing and validation\n5. Test conflict resolution with duplicate recipes\n6. Verify batch operations for multiple recipes\n7. Test with malformed import files\n8. Verify permissions handling",
+        "priority": "low",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "History View - Daily and Calendar",
+        "description": "Implement daily history view and calendar interface for reviewing past logs",
+        "details": "1. Create calendar view showing logged days with indicators\n2. Implement daily summary showing:\n   - Total calories vs target\n   - Macro breakdown vs targets\n   - Meal-by-meal log\n3. Add swipeable daily cards for navigation\n4. Create empty states for days without logs\n5. Implement date selection via calendar\n6. Add meal editing functionality from history\n7. Create streak tracking for consistent logging\n8. Implement day copying functionality",
+        "testStrategy": "1. Test calendar rendering and indicators\n2. Verify daily summary calculations\n3. Test navigation between days\n4. Verify empty states for days without logs\n5. Test meal editing from history\n6. Verify streak tracking accuracy\n7. Test day copying functionality\n8. Verify performance with months of data",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Analytics and Trends",
+        "description": "Implement analytics and trend charts for visualizing progress over time",
+        "details": "1. Integrate chart library (Victory Native or React Native Chart Kit)\n2. Create weekly/monthly trend charts for:\n   - Average calories\n   - Macro adherence\n   - Weight trend (if tracking weight)\n3. Implement date range selection\n4. Add interactive elements to charts (zoom, pan, tooltips)\n5. Create insights panel highlighting achievements/concerns\n6. Implement data aggregation queries for efficient chart rendering\n7. Add export functionality for chart data\n8. Create print/screenshot functionality for reports",
+        "testStrategy": "1. Test chart rendering with various data sets\n2. Verify calculations for trend data\n3. Test interactive chart features\n4. Verify insights generation logic\n5. Test with large data sets for performance\n6. Verify date range filtering\n7. Test export functionality\n8. Verify print/screenshot quality",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Data Export Functionality",
+        "description": "Implement comprehensive data export options for user data portability",
+        "details": "1. Create export options for:\n   - CSV format (date, meal, food, nutrition columns)\n   - JSON format (complete data structure)\n   - PDF summary report\n2. Implement date range selection for exports\n3. Add progress indicator for export generation\n4. Create file sharing via native share sheet\n5. Implement export scheduling/automation\n6. Add export history tracking\n7. Create export preview functionality\n8. Implement proper error handling for failed exports",
+        "testStrategy": "1. Test all export format generations\n2. Verify data accuracy in exported files\n3. Test with various date ranges\n4. Verify large exports don't cause performance issues\n5. Test sharing via various apps\n6. Verify export scheduling\n7. Test preview functionality\n8. Verify error handling for edge cases",
+        "priority": "low",
+        "dependencies": [
+          12,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Settings and Preferences",
+        "description": "Implement user settings and preferences for app customization",
+        "details": "1. Create settings screen with sections:\n   - User Profile\n   - Nutrition Plan\n   - AI Configuration\n   - App Preferences\n   - Data Management\n   - Help & Support\n2. Implement theme switching (light/dark mode)\n3. Add measurement unit preferences (metric/imperial)\n4. Create notification settings\n5. Implement data retention policies\n6. Add about/version information\n7. Create help/FAQ section\n8. Implement feedback/support form",
+        "testStrategy": "1. Test all settings options save correctly\n2. Verify theme switching works across app\n3. Test unit conversion based on preferences\n4. Verify notification settings affect app behavior\n5. Test data retention policy implementation\n6. Verify help/FAQ content is accessible\n7. Test feedback form submission\n8. Verify settings persist across app restarts",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Barcode Scanner Implementation",
+        "description": "Implement barcode scanning functionality for quick food lookup",
+        "details": "1. Integrate barcode scanning library (react-native-camera or ML Kit)\n2. Create scanner interface with viewfinder\n3. Implement Open Food Facts API lookup by barcode\n4. Add manual entry fallback for unrecognized barcodes\n5. Create recently scanned history\n6. Implement scan result caching\n7. Add haptic feedback for successful scans\n8. Create error handling for failed scans",
+        "testStrategy": "1. Test scanning with various product barcodes\n2. Verify API lookup returns correct products\n3. Test manual entry fallback\n4. Verify recently scanned history\n5. Test caching reduces API calls\n6. Verify haptic feedback works\n7. Test error handling for unrecognized barcodes\n8. Verify performance on various devices",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Offline Mode and Sync",
+        "description": "Implement offline functionality and data synchronization",
+        "details": "1. Create offline-first architecture\n2. Implement data queuing for operations when offline\n3. Add sync status indicators\n4. Create conflict resolution for offline changes\n5. Implement background sync when connection restored\n6. Add manual sync trigger\n7. Create sync history and logs\n8. Implement error handling for failed syncs",
+        "testStrategy": "1. Test app functionality in airplane mode\n2. Verify queued operations execute when online\n3. Test conflict resolution with various scenarios\n4. Verify background sync works correctly\n5. Test manual sync trigger\n6. Verify sync history is accurate\n7. Test error handling for interrupted syncs\n8. Verify data integrity after sync cycles",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Notifications and Reminders",
+        "description": "Implement notification system for meal logging reminders and insights",
+        "details": "1. Create notification service using local notifications\n2. Implement meal reminder scheduling\n3. Add customizable reminder times\n4. Create achievement notifications\n5. Implement streak maintenance reminders\n6. Add weekly summary notifications\n7. Create notification preferences screen\n8. Implement notification history",
+        "testStrategy": "1. Test notification scheduling and delivery\n2. Verify customizable times work correctly\n3. Test achievement detection and notifications\n4. Verify streak maintenance logic\n5. Test weekly summary generation\n6. Verify preferences affect notification behavior\n7. Test notification history tracking\n8. Verify notifications work on both iOS and Android",
+        "priority": "low",
+        "dependencies": [
+          5,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Accessibility Implementation",
+        "description": "Implement accessibility features to ensure app usability for all users",
+        "details": "1. Add screen reader support (VoiceOver/TalkBack)\n2. Implement proper semantic markup\n3. Create accessibility labels for all UI elements\n4. Add support for dynamic text sizes\n5. Implement high contrast mode\n6. Create keyboard navigation support\n7. Add color blindness accommodations\n8. Implement accessibility testing framework",
+        "testStrategy": "1. Test with VoiceOver on iOS\n2. Test with TalkBack on Android\n3. Verify all UI elements have proper labels\n4. Test with various text size settings\n5. Verify high contrast mode works correctly\n6. Test keyboard navigation on all screens\n7. Verify color schemes work for color blindness\n8. Conduct accessibility audit using testing tools",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          7,
+          10,
+          12,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Performance Optimization",
+        "description": "Optimize app performance for smooth user experience and battery efficiency",
+        "details": "1. Implement list virtualization for long scrolling lists\n2. Add image caching and optimization\n3. Create efficient database query patterns\n4. Implement memoization for expensive calculations\n5. Add lazy loading for non-critical components\n6. Create background processing for intensive tasks\n7. Implement proper memory management\n8. Add performance monitoring and analytics",
+        "testStrategy": "1. Measure and compare render times before/after\n2. Test scrolling performance on long lists\n3. Verify memory usage remains stable\n4. Test battery consumption during typical usage\n5. Verify app launch time meets requirements\n6. Test performance on lower-end devices\n7. Verify background processing doesn't affect UI\n8. Conduct performance profiling with React DevTools",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          7,
+          9,
+          12,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Error Handling and Logging",
+        "description": "Implement comprehensive error handling and logging system",
+        "details": "1. Create global error boundary\n2. Implement error logging service\n3. Add user-friendly error messages\n4. Create recovery mechanisms for common errors\n5. Implement crash reporting\n6. Add debug mode for development\n7. Create error logs export functionality\n8. Implement network error handling",
+        "testStrategy": "1. Test error boundary with forced errors\n2. Verify error logs contain useful information\n3. Test recovery from common error scenarios\n4. Verify crash reporting works correctly\n5. Test network error handling with poor connectivity\n6. Verify debug mode provides additional information\n7. Test error logs export\n8. Verify user-facing error messages are helpful",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Onboarding Tutorial and Help",
+        "description": "Implement interactive tutorials and help system for new users",
+        "details": "1. Create interactive tutorial overlays for main screens\n2. Implement step-by-step guides for key features\n3. Add contextual help tooltips\n4. Create searchable help center\n5. Implement FAQ section\n6. Add video tutorials for complex features\n7. Create quick start guide\n8. Implement feature discovery hints",
+        "testStrategy": "1. Test tutorial flow with new users\n2. Verify all guides are accurate and helpful\n3. Test help search functionality\n4. Verify tooltips appear in correct contexts\n5. Test FAQ content coverage\n6. Verify video tutorials load and play correctly\n7. Test feature discovery timing and relevance\n8. Conduct usability testing with first-time users",
+        "priority": "low",
+        "dependencies": [
+          5,
+          7,
+          9,
+          10,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Security Implementation",
+        "description": "Implement security features to protect user data and API tokens",
+        "details": "1. Implement secure storage for API tokens using keychain/keystore\n2. Add biometric authentication option\n3. Create data encryption for sensitive information\n4. Implement secure export/import with encryption\n5. Add privacy policy and terms of service\n6. Create data deletion functionality\n7. Implement session management\n8. Add security audit logging",
+        "testStrategy": "1. Test secure storage with various tokens\n2. Verify biometric authentication works correctly\n3. Test encryption/decryption of sensitive data\n4. Verify secure export/import functionality\n5. Test data deletion is complete\n6. Verify privacy controls work as expected\n7. Conduct security audit with testing tools\n8. Test against common security vulnerabilities",
+        "priority": "high",
+        "dependencies": [
+          1,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Localization Framework",
+        "description": "Implement localization framework for future language support",
+        "details": "1. Set up i18n framework (i18next or similar)\n2. Create English language files as base\n3. Implement string extraction workflow\n4. Add language selection in settings\n5. Create date/time/number formatting based on locale\n6. Implement RTL support for future languages\n7. Add translation contribution guidelines\n8. Create automated translation validation",
+        "testStrategy": "1. Verify all UI strings are externalized\n2. Test language switching functionality\n3. Verify date/time/number formatting is correct\n4. Test RTL layout in development mode\n5. Verify no hardcoded strings remain\n6. Test with pseudo-localization to find issues\n7. Verify translation workflow is documented\n8. Test automated validation of translations",
+        "priority": "low",
+        "dependencies": [
+          1,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "App Store Preparation and Deployment",
+        "description": "Prepare the app for submission to iOS App Store and Google Play Store",
+        "details": "1. Create app icons and splash screens for all required sizes\n2. Write App Store descriptions and metadata\n3. Create screenshots for store listings\n4. Implement app signing and code signing\n5. Create privacy policy and terms of service documents\n6. Set up CI/CD pipeline for automated builds\n7. Implement app versioning strategy\n8. Create release notes template",
+        "testStrategy": "1. Verify app passes App Store review guidelines\n2. Test app on various devices for screenshot capture\n3. Verify all required metadata is complete\n4. Test signed builds on test devices\n5. Verify privacy policy covers all data usage\n6. Test CI/CD pipeline with test builds\n7. Verify version and build numbers increment correctly\n8. Conduct final QA testing on production builds",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          5,
+          7,
+          9,
+          10,
+          12,
+          15,
+          19,
+          20,
+          21,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2026-01-18T00:58:10.395Z",
+      "updated": "2026-01-18T00:58:10.395Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
