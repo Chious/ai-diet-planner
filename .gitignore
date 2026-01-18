@@ -65,3 +65,5 @@ dev-debug.log
 # Task files
 # tasks.json
 # tasks/ 
+
+.R_library/

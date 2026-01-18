@@ -68,7 +68,7 @@ export default function TrackerScreen() {
 
         <View style={styles.barChart}>
           {weekBars.map((item, index) => (
-            <View key={weekLabels[index]} style={styles.barGroup}>
+            <View key={`week-bar-${index}`} style={styles.barGroup}>
               <View style={[styles.barSegment, { height: item.top, backgroundColor: palette.accentBlue }]} />
               <View style={[styles.barSegment, { height: item.bottom, backgroundColor: palette.accentGreen }]} />
               <Text style={styles.barLabel}>{weekLabels[index]}</Text>
@@ -99,8 +99,8 @@ export default function TrackerScreen() {
         </View>
 
         <View style={styles.weekRow}>
-          {weekLabels.map((label) => (
-            <Text key={label} style={styles.weekLabel}>
+          {weekLabels.map((label, index) => (
+            <Text key={`week-label-${label}-${index}`} style={styles.weekLabel}>
               {label}
             </Text>
           ))}

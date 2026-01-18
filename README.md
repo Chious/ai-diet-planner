@@ -16,15 +16,35 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Backend
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+```mermaid
+graph TD
+    subgraph User Device
+        UI[App UI]
+        LocalDB[(SQLite)]
+        Logic[Sync Logic]
+        
+        UI <--> LocalDB
+        LocalDB <--> Logic
+    end
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    subgraph Cloud
+        API[API Gateway / Edge Functions]
+        CloudDB[(PostgreSQL)]
+        Search
+        
+        API <--> CloudDB
+        CloudDB --> Search
+    end
+
+    Logic -- "1. Publish (Push JSON)" --> API
+    UI -- "2. Search Community Recipes" --> Search
+    API -- "3. Download & Import" --> UI
+```
 
 ## Reference
 
 1. [How to Build ACTUALLY Beautiful Apps in 3 Prompts Using Cursor 2.0](https://www.youtube.com/watch?v=Be5IAxyxa6g) -- Build Initalize Design Component from scratch
+
+2. [食品營養成分資料庫](https://consumer.fda.gov.tw/Food/TFND.aspx?nodeID=178)

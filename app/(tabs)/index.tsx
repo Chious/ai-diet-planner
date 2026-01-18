@@ -67,8 +67,8 @@ export default function HomeScreen() {
 
       <View style={styles.calendarCard}>
         <View style={styles.calendarRow}>
-          {weekDays.map((day) => (
-            <Text key={day} style={styles.calendarDay}>
+          {weekDays.map((day, index) => (
+            <Text key={`${day}-${index}`} style={styles.calendarDay}>
               {day}
             </Text>
           ))}

@@ -1,0 +1,62 @@
+CREATE TABLE IF NOT EXISTS `diary` (
+	`id` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`date` text NOT NULL,
+	`meal_type` text NOT NULL,
+	`items` text NOT NULL,
+	`notes` text,
+	`created_at` text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `foods` (
+	`id` text PRIMARY KEY NOT NULL,
+	`name` text NOT NULL,
+	`brand` text,
+	`barcode` text,
+	`image_url` text,
+	`source` text NOT NULL,
+	`serving_size` real DEFAULT 100,
+	`serving_unit` text DEFAULT 'g',
+	`base_weight_g` real DEFAULT 100,
+	`calories` real,
+	`protein` real,
+	`carbs` real,
+	`fats` real,
+	`fiber` real,
+	`sugar` real,
+	`sodium` real,
+	`potassium` real,
+	`calcium` real,
+	`magnesium` real,
+	`iron` real,
+	`zinc` real,
+	`phosphorus` real,
+	`copper` real,
+	`manganese` real,
+	`vitamin_a_iu` real,
+	`vitamin_a_re` real,
+	`vitamin_d_iu` real,
+	`vitamin_e` real,
+	`vitamin_k1` real,
+	`vitamin_b1` real,
+	`vitamin_b2` real,
+	`niacin` real,
+	`vitamin_b6` real,
+	`vitamin_b12` real,
+	`folate` real,
+	`vitamin_c` real
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS `users` (
+	`id` text PRIMARY KEY NOT NULL,
+	`age` real,
+	`gender` text,
+	`height_cm` real,
+	`weight_kg` real,
+	`activity_level` real,
+	`goal` text,
+	`target_weight_kg` real,
+	`dietary_restrictions` text,
+	`created_at` text,
+	`updated_at` text
+);
