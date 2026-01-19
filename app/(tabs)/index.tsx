@@ -44,7 +44,7 @@ const meals = [
 
 export default function HomeScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatar}>
@@ -181,7 +181,12 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: palette.background,
+  },
   screen: {
+    flex: 1,
     backgroundColor: palette.background,
   },
   content: {

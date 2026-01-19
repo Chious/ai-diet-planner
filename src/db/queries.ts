@@ -1,21 +1,15 @@
 import { and, desc, eq } from "drizzle-orm";
 
+import { db } from "./client";
 import {
-  db,
-  diary,
-  foods,
-  mealLogs,
-  nutritionPlans,
-  recipes,
-  users,
-} from "./index";
-import {
+  diary, foods, mealLogs,
   NewDiaryEntry,
   NewFood,
   NewMealLog,
   NewNutritionPlan,
   NewRecipe,
   NewUser,
+  nutritionPlans, recipes, users,
 } from "./schema";
 
 export async function createUserProfile(payload: NewUser) {

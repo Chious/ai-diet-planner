@@ -6,6 +6,7 @@ import { desc, like, or } from 'drizzle-orm';
 import { drizzle, useLiveQuery } from 'drizzle-orm/expo-sqlite';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useMemo, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const palette = {
   background: '#F5F5F7',
@@ -90,6 +91,7 @@ function CreateContent({
   setSearchQuery?: (value: string) => void;
 }) {
   return (
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.headerCard}>
         <Text style={styles.title}>Pick a meal</Text>
@@ -125,10 +127,15 @@ function CreateContent({
         ))}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: palette.background,
+  },
   screen: {
     flex: 1,
     backgroundColor: palette.background,

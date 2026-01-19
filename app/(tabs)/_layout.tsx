@@ -1,15 +1,22 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RoundedTabBar } from '@/components/ui/rounded-tab-bar';
 
+const palette = {
+  background: '#F5F5F7',
+};
+
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-      }}
-      tabBar={(props) => <RoundedTabBar {...props} />}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+        }}
+        tabBar={(props) => <RoundedTabBar {...props} />}>
       <Tabs.Screen
         name="index"
         options={{
@@ -47,5 +54,13 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: palette.background,
+  },
+});

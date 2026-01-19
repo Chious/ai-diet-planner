@@ -26,8 +26,13 @@ const tabConfig: Record<
 };
 
 export function RoundedTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const createRoute = state.routes.find((route) => route.name === 'create');
   const scanRoute = state.routes.find((route) => route.name === 'scan');
   const [showCreateSheet, setShowCreateSheet] = useState(false);
+
+  const isCreateFocused = createRoute && state.index === state.routes.indexOf(createRoute);
+  const isScanFocused = scanRoute && state.index === state.routes.indexOf(scanRoute);
+
   return (
     <View style={styles.container}>
       {showCreateSheet ? (
@@ -49,10 +54,35 @@ export function RoundedTabBar({ state, descriptors, navigation }: BottomTabBarPr
           </Pressable>
         </Pressable>
       ) : null}
+
+      {/* Upper Row: Create & Scan */}
+      <View style={styles.upperRow}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={isCreateFocused ? { selected: true } : {}}
+          onPress={() => setShowCreateSheet(true)}
+          style={styles.upperButton}>
+          <View style={styles.upperButtonInner}>
+            <Feather name="plus" size={20} color="#FFFFFF" />
+          </View>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={isScanFocused ? { selected: true } : {}}
+          onPress={() => navigation.navigate('scan')}
+          style={styles.upperButton}>
+          <View style={styles.upperButtonInner}>
+            <Feather name="camera" size={20} color="#FFFFFF" />
+          </View>
+        </Pressable>
+      </View>
+
+      {/* Main Nav Bar */}
       <View style={styles.pill}>
         {state.routes.map((route, index) => {
           const config = tabConfig[route.name];
-          if (!config) {
+          if (!config || config.isCenter || config.isScan) {
             return null;
           }
 
@@ -71,42 +101,6 @@ export function RoundedTabBar({ state, descriptors, navigation }: BottomTabBarPr
               navigation.navigate(route.name);
             }
           };
-
-          if (config.isCenter) {
-            const isScanFocused =
-              scanRoute != null && state.index === state.routes.indexOf(scanRoute);
-            return (
-              <View key={route.key} style={styles.centerGroup}>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityState={isFocused ? { selected: true } : {}}
-                  onPress={() => setShowCreateSheet(true)}
-                  style={styles.centerWrap}>
-                  <View style={styles.centerButton}>
-                    <Feather name={config.icon} size={22} color="#FFFFFF" />
-                  </View>
-                </Pressable>
-                {scanRoute ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={isScanFocused ? { selected: true } : {}}
-                    accessibilityLabel={descriptors[scanRoute.key]?.options.tabBarAccessibilityLabel}
-                    onPress={() => navigation.navigate(scanRoute.name)}
-                    style={styles.centerTabItem}>
-                    <Feather
-                      name="camera"
-                      size={20}
-                      color={isScanFocused ? palette.textPrimary : palette.textSecondary}
-                    />
-                  </Pressable>
-                ) : null}
-              </View>
-            );
-          }
-
-          if (config.isScan) {
-            return null;
-          }
 
           return (
             <Pressable
@@ -128,10 +122,12 @@ export function RoundedTabBar({ state, descriptors, navigation }: BottomTabBarPr
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     backgroundColor: palette.background,
     paddingHorizontal: 24,
     paddingBottom: 16,
     paddingTop: 8,
+    gap: 12,
   },
   sheetOverlay: {
     position: 'absolute',
@@ -172,6 +168,37 @@ const styles = StyleSheet.create({
     color: palette.textPrimary,
     fontFamily: Fonts.rounded,
   },
+  upperRow: {
+    position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 16,
+    right: 24,
+    top: -60,
+  },
+  upperButton: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  upperButtonInner: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    backgroundColor: palette.accentGreen,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+  },
+  upperButtonLabel: {
+    fontSize: 11,
+    fontFamily: Fonts.rounded,
+    fontWeight: '600',
+    color: palette.textPrimary,
+  },
   pill: {
     backgroundColor: palette.surface,
     borderRadius: 28,
@@ -194,31 +221,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: Fonts.rounded,
     fontWeight: '600',
-  },
-  centerWrap: {
-    marginTop: -24,
-  },
-  centerGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginTop: -12,
-  },
-  centerTabItem: {
-    alignItems: 'center',
-    gap: 4,
-    minWidth: 56,
-  },
-  centerButton: {
-    height: 54,
-    width: 54,
-    borderRadius: 27,
-    backgroundColor: palette.accentGreen,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
   },
 });
