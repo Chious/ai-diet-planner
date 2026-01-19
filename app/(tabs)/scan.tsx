@@ -1,7 +1,11 @@
 import { Feather } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Fonts } from '@/constants/theme';
+import { analyzeFoodImage } from '@/src/services/gemini';
 
 const palette = {
   background: '#F5F5F7',
@@ -15,8 +19,96 @@ const palette = {
 };
 
 export default function ScanScreen() {
+  const cameraRef = useRef<CameraView>(null);
+  const [permission, requestPermission] = useCameraPermissions();
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const mockCapture = useMemo(
+    () => ({
+      base64Image:
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8HwQACfsD/Qo1uWAAAAAASUVORK5CYII=',
+      mimeType: 'image/png',
+    }),
+    []
+  );
+
+  const handleScan = useCallback(async () => {
+    if (isAnalyzing) {
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setError(null);
+
+    try {
+      const autoScan =
+        process.env.EXPO_PUBLIC_AUTO_SCAN === 'true' ||
+        Boolean((globalThis as { __DETOX_MOCKS__?: { autoScan?: boolean } }).__DETOX_MOCKS__?.autoScan);
+
+      let capture = mockCapture;
+
+      if (!autoScan) {
+        if (!permission?.granted) {
+          await requestPermission();
+          throw new Error('Camera permission is required to scan food.');
+        }
+
+        if (!cameraRef.current) {
+          throw new Error('Camera is not ready.');
+        }
+
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.7,
+          base64: true,
+        });
+
+        if (!photo.base64) {
+          throw new Error('Failed to capture image.');
+        }
+
+        capture = {
+          base64Image: photo.base64,
+          mimeType: 'image/jpeg',
+        };
+      }
+
+      const result = await analyzeFoodImage(capture);
+      router.push({
+        pathname: '/scan-review' as never,
+        params: {
+          name: result.name,
+          calories: String(result.calories),
+          protein: String(result.macros.protein),
+          carbs: String(result.macros.carbs),
+          fats: String(result.macros.fats),
+        },
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to analyze image.';
+      setError(message);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [isAnalyzing, mockCapture, permission?.granted, requestPermission]);
+
+  useEffect(() => {
+    const autoScan =
+      process.env.EXPO_PUBLIC_AUTO_SCAN === 'true' ||
+      Boolean((globalThis as { __DETOX_MOCKS__?: { autoScan?: boolean } }).__DETOX_MOCKS__?.autoScan);
+
+    if (autoScan) {
+      handleScan();
+    }
+  }, [handleScan]);
+
   return (
     <View style={styles.screen}>
+      {permission?.granted ? (
+        <CameraView ref={cameraRef} style={styles.camera} facing="back" />
+      ) : (
+        <View style={styles.cameraPlaceholder} />
+      )}
       <View style={styles.topRow}>
         <View style={styles.iconCircle}>
           <Feather name="x" size={18} color={palette.textPrimary} />
@@ -59,13 +151,32 @@ export default function ScanScreen() {
             Snap a photo, AI Meal Scan will log your meal in seconds
           </Text>
 
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          {!permission?.granted ? (
+            <Pressable
+              accessibilityRole="button"
+              style={styles.permissionButton}
+              onPress={requestPermission}>
+              <Text style={styles.permissionButtonText}>Enable Camera</Text>
+            </Pressable>
+          ) : null}
+
           <View style={styles.actionRow}>
             <View style={styles.actionIcon}>
               <Feather name="image" size={18} color={palette.accentBlue} />
             </View>
-            <View style={styles.scanButton}>
-              <Feather name="maximize" size={22} color={palette.accentBlue} />
-            </View>
+            <Pressable
+              accessibilityRole="button"
+              testID="scan-capture-button"
+              style={styles.scanButton}
+              onPress={handleScan}>
+              {isAnalyzing ? (
+                <ActivityIndicator size="small" color={palette.accentBlue} />
+              ) : (
+                <Feather name="maximize" size={22} color={palette.accentBlue} />
+              )}
+            </Pressable>
             <View style={styles.actionIcon}>
               <Feather name="help-circle" size={18} color={palette.accentBlue} />
             </View>
@@ -81,6 +192,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: palette.background,
     justifyContent: 'space-between',
+  },
+  camera: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  cameraPlaceholder: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#1C1C1E',
   },
   topRow: {
     flexDirection: 'row',
@@ -190,6 +308,23 @@ const styles = StyleSheet.create({
   panelText: {
     fontSize: 12,
     color: palette.textSecondary,
+    fontFamily: Fonts.rounded,
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#D14343',
+    fontFamily: Fonts.rounded,
+  },
+  permissionButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#1C1C1E',
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  permissionButtonText: {
+    fontSize: 12,
+    color: '#FFFFFF',
     fontFamily: Fonts.rounded,
   },
   actionRow: {

@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getUserProfileById, seedTestUser } from '@/src/db';
 import * as schema from '@/src/db/schema';
+import { applyDetoxMocks } from '@/src/testing/detoxMocks';
 import { getUserId } from '@/src/utils/userIdManager';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import migrations from '../drizzle/migrations';
@@ -22,6 +23,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  applyDetoxMocks();
 
   return (
     <SafeAreaProvider>

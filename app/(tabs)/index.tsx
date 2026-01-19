@@ -1,8 +1,14 @@
 import { Feather } from '@expo/vector-icons';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { router } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { NutritionOverview } from '@/components/nutrition-overview';
 import { Fonts } from '@/constants/theme';
+import { useDatabase } from '@/src/db/client';
+import { getMealLogsByUserAndDate } from '@/src/db/queries';
+import { getUserId } from '@/src/utils/userIdManager';
 
 const palette = {
   background: '#F5F5F7',
@@ -24,28 +30,82 @@ const palette = {
 const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const weekDates = [13, 14, 15, 16, 17, 18, 19];
 
-const meals = [
-  {
-    title: 'Oatmeal with Berries',
-    kcal: 250,
-    carbs: '40g',
-    protein: '10g',
-    fat: '5g',
-    emoji: '🥣',
-  },
-  {
-    title: 'Grilled Chicken Salad',
-    kcal: 180,
-    carbs: '40g',
-    protein: '10g',
-    fat: '5g',
-    emoji: '🥗',
-  },
-];
+type MealSummary = {
+  title: string;
+  kcal: number;
+  carbs: string;
+  protein: string;
+  fat: string;
+  emoji: string;
+};
+
+function formatDate(date = new Date()) {
+  return date.toISOString().split('T')[0];
+}
 
 export default function HomeScreen() {
+  const db = useDatabase();
+  const [dailyCalories, setDailyCalories] = useState(0);
+  const [recentMeals, setRecentMeals] = useState<MealSummary[]>([]);
+
+  const emptyMeals = useMemo<MealSummary[]>(
+    () => [
+      {
+        title: 'No meals logged yet',
+        kcal: 0,
+        carbs: '0g',
+        protein: '0g',
+        fat: '0g',
+        emoji: '🍽️',
+      },
+    ],
+    []
+  );
+
+  const loadDailySummary = useCallback(async () => {
+    const userId = await getUserId();
+    const today = formatDate();
+    const logs = await getMealLogsByUserAndDate(db, userId, today);
+
+    let totalCalories = 0;
+    const mappedMeals: MealSummary[] = [];
+
+    logs.forEach((log) => {
+      try {
+        const items = JSON.parse(log.items) as Array<{
+          name: string;
+          calories: number;
+          macros?: { carbs?: number; protein?: number; fats?: number };
+        }>;
+
+        items.forEach((item) => {
+          totalCalories += item.calories || 0;
+          mappedMeals.push({
+            title: item.name,
+            kcal: Math.round(item.calories || 0),
+            carbs: `${Math.round(item.macros?.carbs ?? 0)}g`,
+            protein: `${Math.round(item.macros?.protein ?? 0)}g`,
+            fat: `${Math.round(item.macros?.fats ?? 0)}g`,
+            emoji: '🍱',
+          });
+        });
+      } catch (error) {
+        console.warn('Failed to parse meal log items', error);
+      }
+    });
+
+    setDailyCalories(Math.round(totalCalories));
+    setRecentMeals(mappedMeals.length > 0 ? mappedMeals.slice(0, 3) : emptyMeals);
+  }, [db, emptyMeals]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadDailySummary();
+    }, [loadDailySummary])
+  );
+
   return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatar}>
@@ -64,6 +124,20 @@ export default function HomeScreen() {
             <Feather name="bell" size={18} color={palette.textSecondary} />
           </View>
         </View>
+      </View>
+
+      <View style={styles.summaryCard}>
+        <Text style={styles.summaryLabel}>Today's Calories</Text>
+        <Text style={styles.summaryValue} testID="daily-calories-value">
+          {dailyCalories} kcal
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          testID="scan-food-button"
+          onPress={() => router.push('/(tabs)/scan')}
+          style={styles.scanButton}>
+          <Text style={styles.scanButtonText}>Scan Food</Text>
+        </Pressable>
       </View>
 
       <View style={styles.calendarCard}>
@@ -95,7 +169,7 @@ export default function HomeScreen() {
 
       <Text style={styles.sectionTitle}>Recently Logged</Text>
       <View style={styles.list}>
-        {meals.map((meal) => (
+        {recentMeals.map((meal) => (
           <View key={meal.title} style={styles.listItem}>
             <View style={styles.mealIcon}>
               <Text style={styles.mealIconText}>{meal.emoji}</Text>
@@ -342,6 +416,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#7FB2E8',
+    fontFamily: Fonts.rounded,
+  },
+  summaryCard: {
+    backgroundColor: palette.surface,
+    borderRadius: 18,
+    padding: 16,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+  },
+  summaryLabel: {
+    fontSize: 12,
+    color: palette.textSecondary,
+    fontFamily: Fonts.rounded,
+  },
+  summaryValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: palette.textPrimary,
+    fontFamily: Fonts.rounded,
+  },
+  scanButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: palette.accentGreen,
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  scanButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: palette.textPrimary,
     fontFamily: Fonts.rounded,
   },
   progressTrack: {
