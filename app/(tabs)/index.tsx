@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { NutritionOverview } from '@/components/nutrition-overview';
 import { Fonts } from '@/constants/theme';
 
 const palette = {
@@ -90,60 +91,7 @@ export default function HomeScreen() {
       </View>
 
       <Text style={styles.sectionTitle}>Daily Overview</Text>
-      <View style={styles.overviewRow}>
-        <View style={styles.budgetCard}>
-          <View style={styles.budgetHeader}>
-            <Text style={styles.budgetTitle}>Calorie Budget</Text>
-            <Feather name="more-vertical" size={16} color={palette.textTertiary} />
-          </View>
-          <View style={styles.budgetRingWrap}>
-            <View style={styles.budgetRingBase} />
-            <View style={styles.budgetRingProgress} />
-            <View style={styles.budgetCenter}>
-              <Text style={styles.budgetUsed}>1,669</Text>
-              <Text style={styles.budgetLabel}>Left</Text>
-              <Text style={styles.budgetLeft}>484</Text>
-            </View>
-          </View>
-          <View style={styles.budgetFooter}>
-            <View style={styles.budgetStat}>
-              <Text style={styles.budgetStatLabel}>Breakfast</Text>
-              <Text style={styles.budgetStatValue}>585</Text>
-            </View>
-            <View style={styles.budgetStat}>
-              <Text style={styles.budgetStatLabel}>Lunch</Text>
-              <Text style={styles.budgetStatValue}>275</Text>
-            </View>
-            <View style={styles.budgetStat}>
-              <Text style={styles.budgetStatLabel}>Dinner</Text>
-              <Text style={styles.budgetStatValue}>659</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.smallCardColumn}>
-          <View style={[styles.smallCard, { backgroundColor: palette.softBlue }]}>
-            <Text style={styles.cardLabel}>Carbs</Text>
-            <Text style={styles.cardValue}>120 g / 250 g</Text>
-            <View style={[styles.progressTrack, { backgroundColor: '#CFE5FF' }]}>
-              <View style={[styles.progressFill, { width: '60%', backgroundColor: palette.accentBlue }]} />
-            </View>
-          </View>
-          <View style={[styles.smallCard, { backgroundColor: palette.softPink }]}>
-            <Text style={styles.cardLabel}>Protein</Text>
-            <Text style={styles.cardValue}>65 g / 100 g</Text>
-            <View style={[styles.progressTrack, { backgroundColor: '#F3D8FA' }]}>
-              <View style={[styles.progressFill, { width: '65%', backgroundColor: palette.accentPink }]} />
-            </View>
-          </View>
-          <View style={[styles.smallCard, { backgroundColor: palette.softPeach }]}>
-            <Text style={styles.cardLabel}>Fat</Text>
-            <Text style={styles.cardValue}>40 g / 70 g</Text>
-            <View style={[styles.progressTrack, { backgroundColor: '#FFE6D3' }]}>
-              <View style={[styles.progressFill, { width: '57%', backgroundColor: palette.accentOrange }]} />
-            </View>
-          </View>
-        </View>
-      </View>
+      <NutritionOverview />
 
       <Text style={styles.sectionTitle}>Recently Logged</Text>
       <View style={styles.list}>

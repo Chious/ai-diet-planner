@@ -67,3 +67,5 @@ dev-debug.log
 # tasks/ 
 
 .R_library/
+
+coverage/

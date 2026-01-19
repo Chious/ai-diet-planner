@@ -1,3 +1,5 @@
-export { db, expoDb } from "./client";
-export * from "./schema";
+export { useDatabase } from "./client";
 export * from "./queries";
+export * from "./schema";
+export * from "./seed";
+

@@ -10,8 +10,9 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { getUserProfileById, seedTestUser } from '@/src/db';
 import * as schema from '@/src/db/schema';
-import { eq } from 'drizzle-orm';
+import { getUserId } from '@/src/utils/userIdManager';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import migrations from '../drizzle/migrations';
 
@@ -26,8 +27,10 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <SQLiteProvider
         databaseName="Food-Composition-Database.db"
-        assetSource={{ assetId: require('./assets/Food-Composition-Database.db') }}
+        assetSource={{ assetId: require('./assets/Food-Composition-Database.db'), forceOverwrite: true }}
         useSuspense
+        
+        
       >
         <MigrationHandler>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -67,19 +70,28 @@ function MigrationHandler({ children }: { children: React.ReactNode }) {
       if (!success) {
         return;
       }
+
+      // Seed test user for development (only runs once)
+      let wasNewUserCreated = false;
+      if (__DEV__) {
+        wasNewUserCreated = await seedTestUser(drizzleDb);
+      }
+
       const isOnboardingRoute = segments[0] === 'onboarding';
       if (isOnboardingRoute) {
         if (isMounted) setIsCheckingProfile(false);
         return;
       }
 
-      const [profile] = await drizzleDb
-        .select()
-        .from(schema.users)
-        .where(eq(schema.users.id, 'default'));
+      const userId = await getUserId();
+      const profile = await getUserProfileById(drizzleDb, userId);
 
       if (!profile) {
         router.replace('/onboarding');
+      } else if (wasNewUserCreated) {
+        // First time seed - redirect to dashboard
+        console.log('🏠 First time seed complete, redirecting to dashboard...');
+        router.replace('/(tabs)');
       }
 
       if (isMounted) setIsCheckingProfile(false);

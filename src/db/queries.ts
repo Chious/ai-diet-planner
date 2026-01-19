@@ -1,6 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
+import type { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 
-import { db } from "./client";
+import * as schema from "./schema";
 import {
   diary, foods, mealLogs,
   NewDiaryEntry,
@@ -12,28 +13,43 @@ import {
   nutritionPlans, recipes, users,
 } from "./schema";
 
-export async function createUserProfile(payload: NewUser) {
+type Database = ExpoSQLiteDatabase<typeof schema>;
+
+export async function createUserProfile(db: Database, payload: NewUser) {
   await db.insert(users).values(payload);
 }
 
-export async function getUserProfileById(id: string) {
+export async function upsertUserProfile(db: Database, payload: NewUser) {
+  await db
+    .insert(users)
+    .values(payload)
+    .onConflictDoUpdate({
+      target: users.id,
+      set: {
+        ...payload,
+        createdAt: undefined, // Don't overwrite createdAt on update
+      },
+    });
+}
+
+export async function getUserProfileById(db: Database, id: string) {
   const [user] = await db.select().from(users).where(eq(users.id, id));
   return user ?? null;
 }
 
-export async function updateUserProfile(id: string, payload: Partial<NewUser>) {
+export async function updateUserProfile(db: Database, id: string, payload: Partial<NewUser>) {
   await db.update(users).set(payload).where(eq(users.id, id));
 }
 
-export async function deleteUserProfile(id: string) {
+export async function deleteUserProfile(db: Database, id: string) {
   await db.delete(users).where(eq(users.id, id));
 }
 
-export async function createNutritionPlan(payload: NewNutritionPlan) {
+export async function createNutritionPlan(db: Database, payload: NewNutritionPlan) {
   await db.insert(nutritionPlans).values(payload);
 }
 
-export async function getActiveNutritionPlan(userId: string) {
+export async function getActiveNutritionPlan(db: Database, userId: string) {
   const [plan] = await db
     .select()
     .from(nutritionPlans)
@@ -42,36 +58,36 @@ export async function getActiveNutritionPlan(userId: string) {
   return plan ?? null;
 }
 
-export async function updateNutritionPlan(id: string, payload: Partial<NewNutritionPlan>) {
+export async function updateNutritionPlan(db: Database, id: string, payload: Partial<NewNutritionPlan>) {
   await db.update(nutritionPlans).set(payload).where(eq(nutritionPlans.id, id));
 }
 
-export async function deleteNutritionPlan(id: string) {
+export async function deleteNutritionPlan(db: Database, id: string) {
   await db.delete(nutritionPlans).where(eq(nutritionPlans.id, id));
 }
 
-export async function createFoodItem(payload: NewFood) {
+export async function createFoodItem(db: Database, payload: NewFood) {
   await db.insert(foods).values(payload);
 }
 
-export async function getFoodById(id: string) {
+export async function getFoodById(db: Database, id: string) {
   const [food] = await db.select().from(foods).where(eq(foods.id, id));
   return food ?? null;
 }
 
-export async function updateFoodItem(id: string, payload: Partial<NewFood>) {
+export async function updateFoodItem(db: Database, id: string, payload: Partial<NewFood>) {
   await db.update(foods).set(payload).where(eq(foods.id, id));
 }
 
-export async function deleteFoodItem(id: string) {
+export async function deleteFoodItem(db: Database, id: string) {
   await db.delete(foods).where(eq(foods.id, id));
 }
 
-export async function createMealLog(payload: NewMealLog) {
+export async function createMealLog(db: Database, payload: NewMealLog) {
   await db.insert(mealLogs).values(payload);
 }
 
-export async function getMealLogsByUserAndDate(userId: string, date: string) {
+export async function getMealLogsByUserAndDate(db: Database, userId: string, date: string) {
   return db
     .select()
     .from(mealLogs)
@@ -79,19 +95,19 @@ export async function getMealLogsByUserAndDate(userId: string, date: string) {
     .orderBy(desc(mealLogs.createdAt));
 }
 
-export async function updateMealLog(id: string, payload: Partial<NewMealLog>) {
+export async function updateMealLog(db: Database, id: string, payload: Partial<NewMealLog>) {
   await db.update(mealLogs).set(payload).where(eq(mealLogs.id, id));
 }
 
-export async function deleteMealLog(id: string) {
+export async function deleteMealLog(db: Database, id: string) {
   await db.delete(mealLogs).where(eq(mealLogs.id, id));
 }
 
-export async function createDiaryEntry(payload: NewDiaryEntry) {
+export async function createDiaryEntry(db: Database, payload: NewDiaryEntry) {
   await db.insert(diary).values(payload);
 }
 
-export async function getDiaryEntriesByUserAndDate(userId: string, date: string) {
+export async function getDiaryEntriesByUserAndDate(db: Database, userId: string, date: string) {
   return db
     .select()
     .from(diary)
@@ -99,27 +115,43 @@ export async function getDiaryEntriesByUserAndDate(userId: string, date: string)
     .orderBy(desc(diary.createdAt));
 }
 
-export async function updateDiaryEntry(id: string, payload: Partial<NewDiaryEntry>) {
+export async function updateDiaryEntry(db: Database, id: string, payload: Partial<NewDiaryEntry>) {
   await db.update(diary).set(payload).where(eq(diary.id, id));
 }
 
-export async function deleteDiaryEntry(id: string) {
+export async function deleteDiaryEntry(db: Database, id: string) {
   await db.delete(diary).where(eq(diary.id, id));
 }
 
-export async function createRecipe(payload: NewRecipe) {
+export async function createRecipe(db: Database, payload: NewRecipe) {
   await db.insert(recipes).values(payload);
 }
 
-export async function getRecipeById(id: string) {
+export async function getRecipeById(db: Database, id: string) {
   const [recipe] = await db.select().from(recipes).where(eq(recipes.id, id));
   return recipe ?? null;
 }
 
-export async function updateRecipe(id: string, payload: Partial<NewRecipe>) {
+export async function updateRecipe(db: Database, id: string, payload: Partial<NewRecipe>) {
   await db.update(recipes).set(payload).where(eq(recipes.id, id));
 }
 
-export async function deleteRecipe(id: string) {
+export async function deleteRecipe(db: Database, id: string) {
   await db.delete(recipes).where(eq(recipes.id, id));
+}
+
+// Nutrition Plan Management with Calculator Integration
+export async function getAllNutritionPlans(db: Database, userId: string) {
+  return db
+    .select()
+    .from(nutritionPlans)
+    .where(eq(nutritionPlans.userId, userId))
+    .orderBy(desc(nutritionPlans.startDate));
+}
+
+export async function deactivateAllNutritionPlans(db: Database, userId: string) {
+  await db
+    .update(nutritionPlans)
+    .set({ isActive: false })
+    .where(eq(nutritionPlans.userId, userId));
 }

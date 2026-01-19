@@ -1,5 +1,5 @@
 import { Stack, router } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -14,11 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DatePickerDialog from '@/components/date-picker';
 import { Fonts } from '@/constants/theme';
-import { users } from '@/src/db/schema';
+import { useDatabase } from '@/src/db/client';
+import { getUserProfileById, upsertUserProfile } from '@/src/db/queries';
+import { createNutritionPlanForUser } from '@/src/services/nutritionPlanService';
+import { getUserId } from '@/src/utils/userIdManager';
 import Slider from '@react-native-community/slider';
-import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/expo-sqlite';
-import { useSQLiteContext } from 'expo-sqlite';
 
 const palette = {
   background: '#F5F5F7',
@@ -50,8 +50,6 @@ const GOALS = [
   { label: 'Gain muscle', value: 'gain' as const },
 ];
 
-const USER_ID = 'default';
-
 type StepKey = 'welcome' | 'personal' | 'activity' | 'goal' | 'diet' | 'review';
 
 const steps: { key: StepKey; title: string }[] = [
@@ -64,8 +62,7 @@ const steps: { key: StepKey; title: string }[] = [
 ];
 
 export default function OnboardingScreen() {
-  const sqliteDb = useSQLiteContext();
-  const db = useMemo(() => drizzle(sqliteDb), [sqliteDb]);
+  const db = useDatabase();
   const [stepIndex, setStepIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -83,7 +80,8 @@ export default function OnboardingScreen() {
   useEffect(() => {
     let isMounted = true;
     async function loadExistingProfile() {
-      const [profile] = await db.select().from(users).where(eq(users.id, USER_ID));
+      const userId = await getUserId();
+      const profile = await getUserProfileById(db, userId);
       console.log('loadExistingProfile', profile);
       if (!profile || !isMounted) return;
       if (profile.age) {
@@ -164,9 +162,13 @@ export default function OnboardingScreen() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setIsSaving(true);
+    
+    // Get or create unique user ID
+    const userId = await getUserId();
+    
     const now = new Date().toISOString();
     const payload = {
-      id: USER_ID,
+      id: userId,
       age: birthDate ? calculateAge(birthDate) : null,
       gender: gender || null,
       heightCm: heightCm ? Number(heightCm) : null,
@@ -179,19 +181,22 @@ export default function OnboardingScreen() {
       updatedAt: now,
     };
 
-    await db
-      .insert(users)
-      .values(payload)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...payload,
-          createdAt: undefined,
-        },
+    await upsertUserProfile(db, payload);
+
+    // Create nutrition plan after profile is saved
+    try {
+      await createNutritionPlanForUser({
+        db,
+        userId,
+        makeActive: true,
       });
+      console.log('✅ Nutrition plan created successfully');
+    } catch (error) {
+      console.error('❌ Failed to create nutrition plan:', error);
+    }
 
     setIsSaving(false);
-    router.back();
+    router.replace('/(tabs)');
   };
 
   return (

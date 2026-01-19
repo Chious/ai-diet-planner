@@ -22,6 +22,10 @@ export default function SettingsScreen() {
         <Text style={styles.actionTitle}>Profile & Onboarding</Text>
         <Text style={styles.actionSubtitle}>Set up or edit your nutrition profile.</Text>
       </Pressable>
+      <Pressable style={styles.actionCard} onPress={() => router.push('/customize-macros')}>
+        <Text style={styles.actionTitle}>Customize Macros</Text>
+        <Text style={styles.actionSubtitle}>Adjust your protein, carbs, and fat targets.</Text>
+      </Pressable>
     </View>
   );
 }
