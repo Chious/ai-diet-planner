@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Fonts } from "@/constants/theme";
-import { useDatabase } from "@/src/db/client";
+import { useDrizzle } from "@/src/context/database-provider";
 import { createMealLog } from "@/src/db/queries";
 import { getUserId } from "@/src/utils/userIdManager";
 
@@ -25,7 +25,7 @@ function createId(prefix: string) {
 }
 
 export default function ScanReviewScreen() {
-  const db = useDatabase();
+  const db = useDrizzle();
   const params = useLocalSearchParams();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -72,7 +72,7 @@ export default function ScanReviewScreen() {
         createdAt: now.toISOString(),
       });
 
-      router.replace("/(tabs)/index");
+      router.replace("/(tabs)");
     } finally {
       setIsSaving(false);
     }

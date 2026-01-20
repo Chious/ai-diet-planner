@@ -6,6 +6,6 @@ export default defineConfig({
   dialect: "sqlite",
   driver: "expo",
   dbCredentials: {
-    url: "./app/assets/Food-Composition-Database.db",
+    url: "./assets/Food-Composition-Database.db",
   },
 });

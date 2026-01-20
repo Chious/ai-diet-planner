@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DatePickerDialog from '@/components/date-picker';
 import { Fonts } from '@/constants/theme';
-import { useDatabase } from '@/src/db/client';
+import { useDrizzle } from '@/src/context/database-provider';
 import { getUserProfileById, upsertUserProfile } from '@/src/db/queries';
 import { createNutritionPlanForUser } from '@/src/services/nutritionPlanService';
 import { getUserId } from '@/src/utils/userIdManager';
@@ -62,7 +62,7 @@ const steps: { key: StepKey; title: string }[] = [
 ];
 
 export default function OnboardingScreen() {
-  const db = useDatabase();
+  const db = useDrizzle();
   const [stepIndex, setStepIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 

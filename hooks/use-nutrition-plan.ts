@@ -1,4 +1,4 @@
-import { useDatabase } from "@/src/db/client";
+import { useDrizzle } from "@/src/context/database-provider";
 import { CustomMacroRatios } from "@/src/services/nutritionCalculator";
 import {
   createNutritionPlanForUser,
@@ -54,7 +54,7 @@ export function useNutritionPlan(
   options: UseNutritionPlanOptions
 ): UseNutritionPlanReturn {
   const { userId, autoLoad = true, checkRecalculation = false } = options;
-  const db = useDatabase();
+  const db = useDrizzle();
 
   const [plan, setPlan] = useState<NutritionPlanWithCalculation | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

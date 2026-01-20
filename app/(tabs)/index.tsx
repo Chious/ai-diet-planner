@@ -6,7 +6,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { NutritionOverview } from '@/components/nutrition-overview';
 import { Fonts } from '@/constants/theme';
-import { useDatabase } from '@/src/db/client';
+import { useDrizzle } from '@/src/context/database-provider';
 import { getMealLogsByUserAndDate } from '@/src/db/queries';
 import { getUserId } from '@/src/utils/userIdManager';
 
@@ -44,7 +44,7 @@ function formatDate(date = new Date()) {
 }
 
 export default function HomeScreen() {
-  const db = useDatabase();
+  const db = useDrizzle();
   const [dailyCalories, setDailyCalories] = useState(0);
   const [recentMeals, setRecentMeals] = useState<MealSummary[]>([]);
 
@@ -72,11 +72,11 @@ export default function HomeScreen() {
 
     logs.forEach((log) => {
       try {
-        const items = JSON.parse(log.items) as Array<{
+        const items = JSON.parse(log.items) as {
           name: string;
           calories: number;
           macros?: { carbs?: number; protein?: number; fats?: number };
-        }>;
+        }[];
 
         items.forEach((item) => {
           totalCalories += item.calories || 0;
@@ -127,7 +127,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.summaryCard}>
-        <Text style={styles.summaryLabel}>Today's Calories</Text>
+        <Text style={styles.summaryLabel}>{`Today's Calories`}</Text>
         <Text style={styles.summaryValue} testID="daily-calories-value">
           {dailyCalories} kcal
         </Text>
@@ -169,8 +169,8 @@ export default function HomeScreen() {
 
       <Text style={styles.sectionTitle}>Recently Logged</Text>
       <View style={styles.list}>
-        {recentMeals.map((meal) => (
-          <View key={meal.title} style={styles.listItem}>
+        {recentMeals.map((meal, index) => (
+          <View key={`${meal.title}-${index}`} style={styles.listItem}>
             <View style={styles.mealIcon}>
               <Text style={styles.mealIconText}>{meal.emoji}</Text>
             </View>
